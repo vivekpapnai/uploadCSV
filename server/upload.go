@@ -1,9 +1,11 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
+	"uploadCSV/models"
 	"uploadCSV/utils"
 )
 
@@ -38,8 +40,26 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 		utils.EncodeJSONBody(resp, http.StatusInternalServerError, err)
 		return
 	}
-	
-	utils.EncodeJSON200Body(resp, url)
+
+	type publishCSVFile struct {
+		Data interface{} `json:"data"`
+	}
+
+	publishCSVFileData := publishCSVFile{Data: url}
+
+	csvFileMetaData, err := json.Marshal(&publishCSVFileData)
+	if err != nil {
+		utils.EncodeJSONBody(resp, http.StatusInternalServerError, err)
+		return
+	}
+
+	srv.KafkaProvider.Publish(models.TopicCSVFileUpload, csvFileMetaData, map[models.KafkaHeaders]interface{}{
+		models.KafkaHeadersWSConnectionUnixNano: time.Now().UnixNano(),
+	})
+
+	utils.EncodeJSON200Body(resp, map[string]interface{}{
+		"message": "success",
+	})
 }
 
 //func (srv *Server) upload(resp http.ResponseWriter, req *http.Request) {

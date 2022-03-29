@@ -3,6 +3,7 @@ package providers
 import (
 	"context"
 	"mime/multipart"
+	"uploadCSV/models"
 )
 
 type StorageProvider interface {
@@ -11,4 +12,5 @@ type StorageProvider interface {
 }
 
 type KafkaProvider interface {
+	Publish(topic models.Topic, message []byte, metaData map[models.KafkaHeaders]interface{})
 }
