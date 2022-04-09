@@ -12,5 +12,5 @@ type StorageProvider interface {
 }
 
 type KafkaProvider interface {
-	Publish(topic models.Topic, message []byte, metaData map[models.KafkaHeaders]interface{})
+	Publish(topic models.Topic, message []byte)
 }

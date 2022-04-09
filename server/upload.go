@@ -25,7 +25,7 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	file, header, err := req.FormFile("images.csv")
+	file, header, err := req.FormFile("imagesCsv")
 	if err != nil {
 		utils.EncodeJSONBody(resp, http.StatusBadRequest, map[string]interface{}{
 			"message": "error data retrieving",
@@ -33,8 +33,13 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	var email string
+
+	email = req.FormValue("email")
+
+	fmt.Println(email)
 	typeOfUpload := "csvFiles"
-	filePath := fmt.Sprintf(`%v/%v-%s.csv`, typeOfUpload, time.Now().Unix(), header.Filename)
+	filePath := fmt.Sprintf(`%v/%v-%s`, typeOfUpload, time.Now().Unix(), header.Filename)
 	url, err := srv.StorageProvider.Upload(req.Context(), file, filePath, "application/octet-stream")
 	if err != nil {
 		utils.EncodeJSONBody(resp, http.StatusInternalServerError, err)
@@ -42,10 +47,11 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 	}
 
 	type publishCSVFile struct {
-		Data interface{} `json:"data"`
+		URL   string `json:"data"`
+		Email string `json:"email"`
 	}
 
-	publishCSVFileData := publishCSVFile{Data: url}
+	publishCSVFileData := publishCSVFile{URL: url, Email: email}
 
 	csvFileMetaData, err := json.Marshal(&publishCSVFileData)
 	if err != nil {
@@ -53,9 +59,7 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	srv.KafkaProvider.Publish(models.TopicCSVFileUpload, csvFileMetaData, map[models.KafkaHeaders]interface{}{
-		models.KafkaHeadersWSConnectionUnixNano: time.Now().UnixNano(),
-	})
+	srv.KafkaProvider.Publish(models.TopicCSVFileUpload, csvFileMetaData)
 
 	utils.EncodeJSON200Body(resp, map[string]interface{}{
 		"message": "success",
