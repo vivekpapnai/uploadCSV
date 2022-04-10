@@ -37,9 +37,9 @@ jobs:
     - name: Build and tag the image
       run: |
         # Build and tag the image
-        docker build $(AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com.$CONTAINER_IMAGE)
-        #docker build -t $CONTAINER_IMAGE .
-        docker tag uploadcsv-eks:latest public.ecr.aws/i1n1w6p9/uploadcsv-eks:latest
+        #docker build $(AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com.$CONTAINER_IMAGE)
+        docker build -t $CONTAINER_IMAGE .
+        docker tag uploadcsv-eks:latest https://442581672040.dkr.ecr.ap-south-1.amazonaws.com
            
 
     # Only push to registry on main
