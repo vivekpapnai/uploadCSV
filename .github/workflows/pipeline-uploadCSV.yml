@@ -33,7 +33,7 @@ jobs:
     - name: Setup ECR
       run: |
         # Login to AWS ECR
-        docker login -u AWS -p $(aws ecr get-login-password --region ap-south-1) xxxxxxxxx.dkr.ecr.ap-south-1.amazonaws.com
+        docker login -u AWS -p $(aws ecr get-login-password --region ap-south-1) --password-stdin.dkr.ecr.ap-south-1.amazonaws.com
     - name: Build and tag the image
       run: |
         # Build and tag the image
