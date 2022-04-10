@@ -29,7 +29,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    # Add steps here like linting, testing, minification, etc.
       
     - name: Setup ECR
       run: |
@@ -38,11 +37,8 @@ jobs:
     - name: Build and tag the image
       run: |
         # Build and tag the image
-        docker build \
-          -t $CONTAINER_IMAGE \
-          -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE ./server
+        docker build -t $CONTAINER_IMAGE -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE ./server
            
-    # Add additional steps here like scanning of image
 
     # Only push to registry on main
     - name: Push
