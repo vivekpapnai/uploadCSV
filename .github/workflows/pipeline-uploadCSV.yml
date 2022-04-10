@@ -37,7 +37,8 @@ jobs:
     - name: Build and tag the image
       run: |
         # Build and tag the image
-        docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE
+        # docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$CONTAINER_IMAGE
+        docker build -t $CONTAINER_IMAGE .
            
 
     # Only push to registry on main
