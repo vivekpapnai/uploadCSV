@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upload-csv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upload-csv-gke
+  template:
+    metadata:
+      labels:
+        app: upload-csv-gke
+    spec:
+      containers:
+        - name: app
+          image: us-central1-docker.pkg.dev/pelagic-chalice-346307/upload-csv/upload-csv-image:$GITHUB_SHA
+          imagePullPolicy: Always
