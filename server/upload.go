@@ -17,9 +17,12 @@ func (srv *Server) greet(resp http.ResponseWriter, req *http.Request) {
 }
 
 func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
+
+	fmt.Println("in uploadCSV handler")
 	// multipart form data
 	err := req.ParseMultipartForm(10 << 20)
 	if err != nil {
+		fmt.Println("uploadCSV", err)
 		utils.EncodeJSONBody(resp, http.StatusBadRequest, map[string]interface{}{
 			"message": "file size should not be greater than 10 mb",
 		})
@@ -28,6 +31,7 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 
 	file, header, err := req.FormFile("imagesCsv")
 	if err != nil {
+		fmt.Println("uploadCSV", err)
 		utils.EncodeJSONBody(resp, http.StatusBadRequest, map[string]interface{}{
 			"message": "error data retrieving",
 		})
@@ -38,11 +42,12 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 
 	email = req.FormValue("email")
 
-	fmt.Println(email)
+	fmt.Println("Upload", email)
 	typeOfUpload := "csvFiles"
 	filePath := fmt.Sprintf(`%v/%v-%s`, typeOfUpload, time.Now().Unix(), header.Filename)
 	url, err := srv.StorageProvider.Upload(req.Context(), file, filePath, "application/octet-stream")
 	if err != nil {
+		fmt.Println("uploadCSV", err)
 		utils.EncodeJSONBody(resp, http.StatusInternalServerError, err)
 		logrus.Errorf("uploadCSV: error in uploading csv: %v", err)
 		return
@@ -57,6 +62,7 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 
 	csvFileMetaData, err := json.Marshal(&publishCSVFileData)
 	if err != nil {
+		fmt.Println("uploadCSV", err)
 		utils.EncodeJSONBody(resp, http.StatusInternalServerError, err)
 		logrus.Errorf("uplaodCSV: error in marshalling metadata: %v", err)
 		return
