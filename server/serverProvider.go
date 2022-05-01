@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"time"
 	"uploadCSV/providers"
 	"uploadCSV/providers/kafkaProvider"
@@ -32,7 +33,8 @@ func SrvInit() *Server {
 		KafkaProvider: kp}
 }
 
-func (srv *Server) Start(addr string) {
+func (srv *Server) Start() {
+	addr := ":" + os.Getenv("PORT")
 	httpSrv := &http.Server{
 		Addr:              addr,
 		Handler:           srv.InjectRoutes(),

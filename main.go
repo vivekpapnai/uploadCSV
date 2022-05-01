@@ -19,7 +19,7 @@ func LoadEnv() {
 
 func main() {
 	srv := server.SrvInit()
-	srv.Start(":8080")
+	srv.Start()
 
 	LoadEnv()
 	fmt.Println("connected")
