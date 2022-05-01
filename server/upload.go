@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
 	"uploadCSV/models"
@@ -43,6 +44,7 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 	url, err := srv.StorageProvider.Upload(req.Context(), file, filePath, "application/octet-stream")
 	if err != nil {
 		utils.EncodeJSONBody(resp, http.StatusInternalServerError, err)
+		logrus.Errorf("uploadCSV: error in uploading csv: %v", err)
 		return
 	}
 
@@ -56,6 +58,7 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 	csvFileMetaData, err := json.Marshal(&publishCSVFileData)
 	if err != nil {
 		utils.EncodeJSONBody(resp, http.StatusInternalServerError, err)
+		logrus.Errorf("uplaodCSV: error in marshalling metadata: %v", err)
 		return
 	}
 
