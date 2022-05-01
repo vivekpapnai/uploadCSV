@@ -16,6 +16,6 @@ spec:
         - name: app
           image: us-central1-docker.pkg.dev/pelagic-chalice-346307/upload-csv/upload-csv-image:latest
           imagePullPolicy: Always
-      envFrom:
-        - configMapRef:
-            name: uploadcsv-configs
+          envFrom:
+            - configMapRef:
+              name: uploadcsv-configs
