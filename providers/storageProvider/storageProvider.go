@@ -2,6 +2,7 @@ package storageProvider
 
 import (
 	"context"
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -57,6 +58,7 @@ func (as AWSStorage) Upload(ctx context.Context, file multipart.File, fileName, 
 	})
 
 	if err != nil {
+		fmt.Println("Upload", err)
 		return "", err
 	}
 

@@ -10,6 +10,10 @@ import (
 	"uploadCSV/utils"
 )
 
+func (srv *Server) healthCheck(w http.ResponseWriter, _ *http.Request) {
+	utils.EncodeJSON200Body(w, `{"up": true}`)
+}
+
 func (srv *Server) greet(resp http.ResponseWriter, req *http.Request) {
 	utils.EncodeJSON200Body(resp, map[string]interface{}{
 		"message": "welcome to image downloading service",
