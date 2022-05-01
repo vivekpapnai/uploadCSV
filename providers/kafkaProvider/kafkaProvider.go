@@ -2,10 +2,12 @@ package kafkaProvider
 
 import (
 	"context"
+	"fmt"
 	"github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
 	"log"
 	"os"
+	"uploadCSV/env"
 	"uploadCSV/models"
 	"uploadCSV/providers"
 )
@@ -25,7 +27,13 @@ type KafkaProvider struct {
 }
 
 func NewKafkaProvider() providers.KafkaProvider {
-	kafkaHost := "localhost:9092"
+	kafkaHost := "kafka:9092"
+	if !env.InKubeCluster() {
+		kafkaHost = "localhost:9092"
+	}
+
+	logrus.Infof("is env in kuberenets: %v", env.InKubeCluster())
+
 	l := log.New(os.Stdout, "kafka writer: ", 0)
 
 	// chatWriter is a kafka writer for chat messages
@@ -52,6 +60,7 @@ func NewKafkaProvider() providers.KafkaProvider {
 }
 
 func (k *KafkaProvider) Publish(topic models.Topic, message []byte) {
+	fmt.Println("In kafka publisher")
 	switch topic {
 	case models.TopicCSVFileUpload:
 		err := k.csvFileWriter.WriteMessages(context.Background(),
@@ -60,6 +69,7 @@ func (k *KafkaProvider) Publish(topic models.Topic, message []byte) {
 			},
 		)
 		if err != nil {
+			fmt.Println("Publish", err)
 			logrus.Errorf("Publish: failed to write csv file upload: %v", err)
 		}
 	case models.TopicZipFileUpload:
@@ -72,6 +82,7 @@ func (k *KafkaProvider) Publish(topic models.Topic, message []byte) {
 			logrus.Errorf("Publish: failed to write csv file upload: %v", err)
 		}
 	default:
+		fmt.Println("In default topic")
 		logrus.Warn("Trying to publish on wrong topic")
 	}
 }
