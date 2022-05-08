@@ -6,7 +6,7 @@ import (
 
 func (srv *Server) InjectRoutes() *chi.Mux {
 	router := chi.NewRouter()
-	router.Get(`/health`, srv.healthCheck)
+	router.Get(`/`, srv.healthCheck)
 
 	router.Route("/api", func(api chi.Router) {
 		api.Get("/welcome", srv.greet)
