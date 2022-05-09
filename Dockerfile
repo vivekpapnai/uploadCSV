@@ -1,9 +1,6 @@
 FROM golang:1.16.6-alpine3.14 AS builder
-
-RUN apk add -U --no-cache ca-certificates
-
-FROM scratch
-COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificates
+RUN apk add -U --no-cache ca-certificates && update-ca-certificates
 
 WORKDIR /server
 ENV GO111MODULE=on
