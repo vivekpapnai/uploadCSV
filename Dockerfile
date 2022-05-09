@@ -17,7 +17,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=readonly -o /go/bin/uploadCSV
 
-FROM scratch
+FROM scratch as app
 COPY --from=builder /go/bin/uploadCSV /go/bin/uploadCSV
 EXPOSE 8080
 ENTRYPOINT ["/go/bin/uploadCSV"]
