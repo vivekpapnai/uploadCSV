@@ -1,6 +1,6 @@
 FROM golang:1.16.6-alpine3.14 AS builder
 # Install Certificate
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
+RUN apk add -U --no-cache ca-certificates
 
 FROM scratch AS app
 
