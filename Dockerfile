@@ -1,4 +1,5 @@
 FROM golang:1.16.6-alpine3.14 AS builder
+#RUN apk add -U --no-cache ca-certificates && update-ca-certificates
 
 WORKDIR /server
 ENV GO111MODULE=on
@@ -14,7 +15,3 @@ FROM scratch
 COPY --from=builder /go/bin/uploadCSV /go/bin/uploadCSV
 EXPOSE 8080
 ENTRYPOINT ["/go/bin/uploadCSV"]
-
-RUN apk add -U --no-cache ca-certificates
-FROM scratch
-COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
