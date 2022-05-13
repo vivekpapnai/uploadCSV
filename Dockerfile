@@ -3,7 +3,7 @@ RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificat
 
 RUN apk add -U --no-cache ca-certificates
 
-COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /go/bin/ssl/certs/
+COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 WORKDIR /server
 ENV GO111MODULE=on
