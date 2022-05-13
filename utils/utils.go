@@ -21,6 +21,9 @@ func EncodeJSON200Body(resp http.ResponseWriter, data interface{}) {
 
 func EncodeJSONBody(resp http.ResponseWriter, statusCode int, data interface{}) {
 	resp.WriteHeader(statusCode)
+	if err := json.NewEncoder(resp).Encode(data); err != nil {
+		logrus.Error(err)
+	}
 	err := json.NewEncoder(resp).Encode(data)
 	if err != nil {
 		logrus.Errorf("Error encoding response %v", err)

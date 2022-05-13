@@ -52,7 +52,9 @@ func (srv *Server) uploadCSV(resp http.ResponseWriter, req *http.Request) {
 	url, err := srv.StorageProvider.Upload(req.Context(), file, filePath, "application/octet-stream")
 	if err != nil {
 		fmt.Println("uploadCSV", err)
-		utils.EncodeJSONBody(resp, http.StatusInternalServerError, err)
+		utils.EncodeJSONBody(resp, http.StatusInternalServerError, map[string]interface{}{
+			"error": err,
+		})
 		logrus.Errorf("uploadCSV: error in uploading csv: %v", err)
 		return
 	}
